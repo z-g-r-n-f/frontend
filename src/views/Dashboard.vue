@@ -6,14 +6,14 @@
 
 <h1>
 
-你好，{{username}} 👋
+{{ $t("dashboard.greeting", {name: username}) }}
 
 </h1>
 
 
 <p class="sub">
 
-欢迎回来，这是你的数字设备空间
+{{ $t("dashboard.subtitle") }}
 
 </p>
 
@@ -25,7 +25,7 @@
 <div class="card">
 
 <h3>
-设备数量
+{{ $t("dashboard.deviceCount") }}
 </h3>
 
 
@@ -42,7 +42,7 @@
 <div class="card">
 
 <h3>
-购买价值
+{{ $t("dashboard.purchaseValue") }}
 </h3>
 
 
@@ -60,7 +60,7 @@
 <div class="card">
 
 <h3>
-当前价值
+{{ $t("dashboard.currentValue") }}
 </h3>
 
 
@@ -81,7 +81,7 @@
 
 
 <h2>
-设备状态分析
+{{ $t("dashboard.statusTitle") }}
 </h2>
 
 
@@ -106,10 +106,12 @@
 
 import {
 onMounted,
-ref
+ref,
+watch
 }
 from "vue"
 
+import {useI18n} from "vue-i18n"
 
 import * as echarts from "echarts"
 
@@ -119,6 +121,9 @@ getDevices
 }
 from "../api/device"
 
+
+
+const {t, locale}=useI18n()
 
 
 const username=
@@ -134,8 +139,14 @@ const totalPrice=ref(0)
 const currentValue=ref(0)
 
 
+let chart=null
+
+
 
 onMounted(async()=>{
+
+
+try{
 
 
 let userId=
@@ -143,7 +154,23 @@ localStorage.getItem("userId")
 
 
 devices.value=
-await getDevices(userId)
+(await getDevices(userId)) || []
+
+
+}catch(e){
+
+
+// 后端未启动时接口会失败，这里不中断页面，用空数据展示
+console.warn(
+"设备数据加载失败（后端可能没有启动）",
+e
+)
+
+
+devices.value=[]
+
+
+}
 
 
 
@@ -174,57 +201,70 @@ drawChart()
 
 
 
+// 切换语言时重绘图表，让图例文字跟着变
+watch(locale,()=>{
+
+drawChart()
+
+})
+
+
+
 function drawChart(){
 
 
-let chart=
-echarts.init(
+let dom=
 document.getElementById("chart")
-)
 
+
+if(!dom) return
+
+
+if(!chart){
+
+chart=echarts.init(dom)
+
+}
 
 
 chart.setOption({
 
-
 tooltip:{},
 
+legend:{
+bottom:0
+},
 
 series:[{
 
-
 type:"pie",
 
-
 radius:"60%",
-
 
 data:[
 
 
 {
-name:"使用中",
+name:t("dashboard.inUse"),
 value:8
 },
 
 
 {
-name:"停用",
+name:t("dashboard.idle"),
 value:2
 },
 
 
 {
-name:"出售",
+name:t("dashboard.sold"),
 value:1
 }
 
 
 ]
 
-
 }]
-
 
 })
 
@@ -253,9 +293,7 @@ color:#777;
 
 
 display:flex;
-
 gap:25px;
-
 margin-top:30px;
 
 
@@ -267,13 +305,9 @@ margin-top:30px;
 
 
 flex:1;
-
 background:white;
-
 border-radius:20px;
-
 padding:30px;
-
 box-shadow:
 0 10px 30px rgba(0,0,0,.08);
 
@@ -286,9 +320,7 @@ box-shadow:
 
 
 font-size:32px;
-
 font-weight:bold;
-
 
 color:#315efb;
 
@@ -303,9 +335,7 @@ color:#315efb;
 margin-top:40px;
 
 background:white;
-
 border-radius:25px;
-
 padding:30px;
 
 
@@ -320,6 +350,7 @@ height:350px;
 
 
 }
+
 
 
 </style>

@@ -9,16 +9,28 @@
 <div class="background-circle circle2"></div>
 
 
+<!-- 右上角语言切换 -->
+<div class="lang-corner">
+
+<LangSwitch/>
+
+</div>
+
+
 <div class="register-card">
 
 
 <h1>
-创建账号
+
+{{ $t("register.title") }}
+
 </h1>
 
 
 <p>
-开始管理你的设备空间
+
+{{ $t("register.subtitle") }}
+
 </p>
 
 
@@ -26,7 +38,7 @@
 
 v-model="form.username"
 
-placeholder="用户名"
+:placeholder="$t('register.username')"
 
 />
 
@@ -39,7 +51,7 @@ type="password"
 
 show-password
 
-placeholder="密码"
+:placeholder="$t('register.password')"
 
 />
 
@@ -52,7 +64,7 @@ type="password"
 
 show-password
 
-placeholder="确认密码"
+:placeholder="$t('register.confirmPassword')"
 
 :status="passwordMismatch ? 'error' : ''"
 
@@ -61,7 +73,7 @@ placeholder="确认密码"
 
 <div class="password-error" v-if="passwordMismatch">
 
-两次输入的密码不一致
+{{ $t("register.mismatch") }}
 
 </div>
 
@@ -70,7 +82,7 @@ placeholder="确认密码"
 
 v-model="form.email"
 
-placeholder="邮箱"
+:placeholder="$t('register.email')"
 
 />
 
@@ -83,7 +95,7 @@ type="primary"
 
 >
 
-注册
+{{ $t("register.submit") }}
 
 </el-button>
 
@@ -91,11 +103,11 @@ type="primary"
 
 <div class="to-login">
 
-已有账号？
+{{ $t("register.hasAccount") }}
 
 <span @click="$router.push('/login')">
 
-去登录
+{{ $t("register.toLogin") }}
 
 </span>
 
@@ -119,9 +131,16 @@ type="primary"
 
 import {reactive, ref, computed} from "vue"
 
+import {useI18n} from "vue-i18n"
+
 
 import {register}
 from "../api/user"
+
+import LangSwitch from "../components/LangSwitch.vue"
+
+
+const {t}=useI18n()
 
 
 const form=reactive({
@@ -139,7 +158,7 @@ email:""
 const confirmPassword=ref("")
 
 
-// 实时判断两次密码是否不一致（确认密码栏有内容且和密码不同时才提示）
+// 实时判断两次密码是否不一致
 const passwordMismatch=computed(()=>{
 
 return confirmPassword.value!=="" && confirmPassword.value!==form.password
@@ -154,7 +173,7 @@ async function submit(){
 // 检查两次密码是否一致
 if(form.password!==confirmPassword.value){
 
-alert("两次输入的密码不一致，请重新输入")
+alert(t("register.mismatchAlert"))
 
 return
 
@@ -171,34 +190,13 @@ name:form.username
 })
 
 
-alert("注册成功")
+alert(t("register.success"))
 
 }
 
 
 
 </script>
-
-
-
-<style scoped>
-
-
-.password-error{
-
-
-color:#f56c6c;
-
-font-size:12px;
-
-margin-top:-8px;
-
-margin-bottom:8px;
-
-}
-
-
-</style>
 
 
 
@@ -230,6 +228,22 @@ position:relative;
 
 
 overflow:hidden;
+
+
+}
+
+
+
+.lang-corner{
+
+
+position:absolute;
+
+top:30px;
+
+right:40px;
+
+z-index:10;
 
 
 }
@@ -348,13 +362,26 @@ text-decoration:underline;
 
 
 
+.password-error{
+
+
+color:#f56c6c;
+
+font-size:12px;
+
+margin-top:-8px;
+
+margin-bottom:8px;
+
+}
+
+
+
 .background-circle{
 
 
 position:absolute;
-
 border-radius:50%;
-
 filter:blur(30px);
 
 }
@@ -365,15 +392,10 @@ filter:blur(30px);
 
 
 width:300px;
-
 height:300px;
-
 background:#fff;
-
 opacity:.2;
-
 top:-100px;
-
 left:-100px;
 
 
@@ -385,15 +407,10 @@ left:-100px;
 
 
 width:400px;
-
 height:400px;
-
 background:#ff9;
-
 opacity:.15;
-
 bottom:-200px;
-
 right:-100px;
 
 

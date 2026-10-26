@@ -9,22 +9,36 @@
 <div class="background-circle circle2"></div>
 
 
+<!-- 右上角语言切换 -->
+<div class="lang-corner">
+
+<LangSwitch/>
+
+</div>
+
+
 
 <div class="brand">
 
 
 <h1>
-DeviceLife
+
+{{ $t("app.name") }}
+
 </h1>
 
 
 <h2>
-个人电子设备生命周期管理系统
+
+{{ $t("app.subtitle") }}
+
 </h2>
 
 
 <p>
-Manage your digital assets intelligently
+
+{{ $t("app.slogan") }}
+
 </p>
 
 
@@ -36,12 +50,16 @@ Manage your digital assets intelligently
 
 
 <h1>
-欢迎回来
+
+{{ $t("login.title") }}
+
 </h1>
 
 
 <p>
-登录你的设备空间
+
+{{ $t("login.subtitle") }}
+
 </p>
 
 
@@ -50,7 +68,7 @@ Manage your digital assets intelligently
 
 v-model="form.username"
 
-placeholder="用户名"
+:placeholder="$t('login.username')"
 
 />
 
@@ -61,7 +79,9 @@ v-model="form.password"
 
 type="password"
 
-placeholder="密码"
+show-password
+
+:placeholder="$t('login.password')"
 
 />
 
@@ -75,7 +95,7 @@ type="primary"
 
 >
 
-登录
+{{ $t("login.submit") }}
 
 </el-button>
 
@@ -83,11 +103,11 @@ type="primary"
 
 <div class="register">
 
-没有账号？
+{{ $t("login.noAccount") }}
 
 <span @click="$router.push('/register')">
 
-立即注册
+{{ $t("login.toRegister") }}
 
 </span>
 
@@ -100,7 +120,6 @@ type="primary"
 
 
 </div>
-
 </template>
 
 
@@ -108,18 +127,15 @@ type="primary"
 <script setup>
 
 
-import {
-reactive
-} from "vue"
+import {reactive} from "vue"
 
 
-import {
-login
-} from "../api/user"
-
+import {login}
+from "../api/user"
 
 import router from "../router"
 
+import LangSwitch from "../components/LangSwitch.vue"
 
 
 const form=reactive({
@@ -188,6 +204,22 @@ position:relative;
 
 
 overflow:hidden;
+
+
+}
+
+
+
+.lang-corner{
+
+
+position:absolute;
+
+top:30px;
+
+right:40px;
+
+z-index:10;
 
 
 }
@@ -306,9 +338,7 @@ cursor:pointer;
 
 
 position:absolute;
-
 border-radius:50%;
-
 filter:blur(30px);
 
 }
@@ -319,15 +349,10 @@ filter:blur(30px);
 
 
 width:300px;
-
 height:300px;
-
 background:#fff;
-
 opacity:.2;
-
 top:-100px;
-
 left:-100px;
 
 
@@ -339,15 +364,10 @@ left:-100px;
 
 
 width:400px;
-
 height:400px;
-
 background:#ff9;
-
 opacity:.15;
-
 bottom:-200px;
-
 right:-100px;
 
 
