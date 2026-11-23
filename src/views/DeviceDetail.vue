@@ -48,6 +48,14 @@
                         <strong>{{ currency(device.currentValue) }}</strong>
                     </div>
                     <div class="hero-actions">
+                        <el-button
+                            v-if="supportsPowerShell"
+                            type="warning"
+                            plain
+                            @click="powerShellDialogVisible = true"
+                        >
+                            {{ $t("device.powerShellCollect") }}
+                        </el-button>
                         <el-button @click="$router.push(`/devices/${device.deviceId}/edit`)">
                             {{ $t("common.edit") }}
                         </el-button>
@@ -457,6 +465,40 @@
                 </el-button>
             </template>
         </el-dialog>
+
+        <el-dialog
+            v-model="powerShellDialogVisible"
+            :title="$t('device.powerShellTitle')"
+            width="760px"
+            destroy-on-close
+        >
+            <el-alert
+                :title="$t('device.powerShellIntro')"
+                type="info"
+                :closable="false"
+                show-icon
+            />
+            <ol class="powershell-steps">
+                <li>{{ $t("device.powerShellStep1") }}</li>
+                <li>{{ $t("device.powerShellStep2") }}</li>
+                <li>{{ $t("device.powerShellStep3") }}</li>
+            </ol>
+            <el-input
+                :model-value="powerShellCommand"
+                type="textarea"
+                :rows="4"
+                readonly
+            />
+            <p class="powershell-note">{{ $t("device.powerShellPasswordNote") }}</p>
+
+            <template #footer>
+                <el-button @click="powerShellDialogVisible = false">{{ $t("common.cancel") }}</el-button>
+                <el-button @click="copyPowerShellCommand">{{ $t("device.powerShellCopy") }}</el-button>
+                <el-button type="primary" @click="refreshAfterPowerShell">
+                    {{ $t("device.powerShellRefresh") }}
+                </el-button>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -476,6 +518,7 @@ import {
     getDeviceTotalCost,
     saveDeviceHealth
 } from "../api/device"
+import { getCurrentUserId } from "../utils/session"
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -504,6 +547,7 @@ const eventForm = reactive({
 const healthDialogVisible = ref(false)
 const healthSaving = ref(false)
 const healthFormRef = ref(null)
+const powerShellDialogVisible = ref(false)
 const healthForm = reactive({
     cpuUsage: null,
     memoryUsage: null,
@@ -512,6 +556,18 @@ const healthForm = reactive({
     batteryHealth: null,
     batteryCycleCount: null,
     healthScore: null
+})
+
+const PUBLIC_API_BASE_URL = "https://frp-air.com:40538/api"
+
+const supportsPowerShell = computed(() =>
+    ["LAPTOP", "DESKTOP"].includes(device.value.deviceType)
+)
+
+const powerShellCommand = computed(() => {
+    const userId = getCurrentUserId() || "<登录后自动填充>"
+    const type = device.value.deviceType || "LAPTOP"
+    return `powershell -NoProfile -ExecutionPolicy Bypass -File ".\\Collect-DeviceInfo.ps1" -UserId ${userId} -DeviceId ${deviceId} -ApiBaseUrl "${PUBLIC_API_BASE_URL}" -DeviceType ${type}`
 })
 
 const eventTypeOptions = computed(() =>
@@ -766,6 +822,21 @@ async function saveHealth() {
     }
 }
 
+async function copyPowerShellCommand() {
+    try {
+        await navigator.clipboard.writeText(powerShellCommand.value)
+        ElMessage.success(t("device.powerShellCopied"))
+    } catch {
+        ElMessage.warning(t("device.powerShellCopyFailed"))
+    }
+}
+
+async function refreshAfterPowerShell() {
+    powerShellDialogVisible.value = false
+    await loadDevice()
+    ElMessage.success(t("device.powerShellRefreshDone"))
+}
+
 async function removeDevice() {
     try {
         await ElMessageBox.confirm(
@@ -971,6 +1042,19 @@ onMounted(loadDevice)
 .hero-actions :deep(.el-button--danger) {
     background: rgba(239, 68, 68, 0.18);
     border-color: rgba(255, 255, 255, 0.22);
+}
+
+.powershell-steps {
+    margin: 18px 0;
+    padding-left: 22px;
+    line-height: 1.9;
+}
+
+.powershell-note {
+    margin: 12px 0 0;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
 }
 
 .detail-grid {

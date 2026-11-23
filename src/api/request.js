@@ -1,12 +1,35 @@
 import axios from "axios"
 
-const baseURL =
-    import.meta.env.VITE_API_BASE_URL ||
-    "http://localhost:8080/api"
+// DeviceLife backend is exposed through the SakuraFrp HTTPS tunnel.
+// Keep this address in the frontend so a separately opened frontend can reach
+// the backend without depending on the local machine's localhost:8080.
+const baseURL = "https://frp-air.com:40538/api"
 
 const request = axios.create({
     baseURL,
-    timeout: 12000
+    timeout: 12000,
+    withCredentials: true
+})
+
+request.interceptors.request.use(config => {
+    let userId = localStorage.getItem("userId")
+    try {
+        const stored = JSON.parse(localStorage.getItem("devicelife.user") || "null")
+        userId = stored?.userId || userId
+    } catch {
+        // Keep the legacy userId value when the stored profile is unavailable.
+    }
+
+    if (userId) {
+        config.params = {
+            ...(config.params || {}),
+            userId: config.params?.userId ?? userId
+        }
+        config.headers = config.headers || {}
+        config.headers["X-User-Id"] = String(userId)
+    }
+
+    return config
 })
 
 request.interceptors.response.use(
