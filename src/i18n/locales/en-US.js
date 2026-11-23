@@ -225,7 +225,7 @@ export default {
         powerShellIntro: "Copy Collect-DeviceInfo.ps1 into the current PowerShell directory, then run the command below. Device and health data will be written to this device through the public backend.",
         powerShellStep1: "Open PowerShell on the target Windows computer.",
         powerShellStep2: "Copy Collect-DeviceInfo.ps1 from the project scripts folder into the current directory, then run the command.",
-        powerShellStep3: "The script will ask for the SakuraFrp access password; click refresh when it finishes.",
+        powerShellStep3: "If tunnel access authentication is enabled, the script will ask for its password; click refresh when it finishes.",
         powerShellCopy: "Copy command",
         powerShellCopied: "Command copied",
         powerShellCopyFailed: "Copy failed. Select the command and copy it manually.",

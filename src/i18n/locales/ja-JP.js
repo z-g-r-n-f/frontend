@@ -225,7 +225,7 @@ export default {
         powerShellIntro: "Collect-DeviceInfo.ps1 を現在の PowerShell フォルダーにコピーして、下のコマンドを実行してください。デバイスと健康データは公開バックエンド経由で現在のデバイスに保存されます。",
         powerShellStep1: "対象の Windows コンピューターで PowerShell を開きます。",
         powerShellStep2: "プロジェクトの scripts フォルダーから Collect-DeviceInfo.ps1 を現在のフォルダーにコピーして実行します。",
-        powerShellStep3: "SakuraFrp のアクセスパスワードを入力し、完了後に更新を押します。",
+        powerShellStep3: "トンネル認証が有効な場合はパスワードを入力し、完了後に更新を押します。",
         powerShellCopy: "コマンドをコピー",
         powerShellCopied: "コマンドをコピーしました",
         powerShellCopyFailed: "コピーに失敗しました。コマンドを選択して手動でコピーしてください。",

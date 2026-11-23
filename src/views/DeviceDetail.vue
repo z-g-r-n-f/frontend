@@ -558,7 +558,7 @@ const healthForm = reactive({
     healthScore: null
 })
 
-const PUBLIC_API_BASE_URL = "https://frp-air.com:40538/api"
+const PUBLIC_API_BASE_URL = "http://frp-air.com:40538/api"
 
 const supportsPowerShell = computed(() =>
     ["LAPTOP", "DESKTOP"].includes(device.value.deviceType)

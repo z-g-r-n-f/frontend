@@ -225,7 +225,7 @@ export default {
         powerShellIntro: "Collect-DeviceInfo.ps1을 현재 PowerShell 폴더에 복사한 뒤 아래 명령을 실행하세요. 기기 및 건강 데이터가 공용 백엔드를 통해 현재 기기에 저장됩니다.",
         powerShellStep1: "대상 Windows 컴퓨터에서 PowerShell을 엽니다.",
         powerShellStep2: "프로젝트 scripts 폴더의 Collect-DeviceInfo.ps1을 현재 폴더에 복사한 뒤 명령을 실행합니다.",
-        powerShellStep3: "SakuraFrp 접속 비밀번호를 입력하고 완료 후 새로 고침을 누릅니다.",
+        powerShellStep3: "터널 접속 인증이 켜져 있으면 비밀번호를 입력하고 완료 후 새로 고침을 누릅니다.",
         powerShellCopy: "명령 복사",
         powerShellCopied: "명령이 복사되었습니다",
         powerShellCopyFailed: "복사하지 못했습니다. 명령을 직접 선택하여 복사하세요.",

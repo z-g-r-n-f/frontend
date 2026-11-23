@@ -3,7 +3,7 @@ import axios from "axios"
 // DeviceLife backend is exposed through the SakuraFrp HTTPS tunnel.
 // Keep this address in the frontend so a separately opened frontend can reach
 // the backend without depending on the local machine's localhost:8080.
-const baseURL = "https://frp-air.com:40538/api"
+const baseURL = "http://frp-air.com:40538/api"
 
 const request = axios.create({
     baseURL,

@@ -225,7 +225,7 @@ export default {
         powerShellIntro: "请先把 Collect-DeviceInfo.ps1 放到当前 PowerShell 所在目录，再复制下面的命令执行。设备信息和健康数据会通过公网后端写入当前设备记录。",
         powerShellStep1: "在目标 Windows 电脑上打开 PowerShell。",
         powerShellStep2: "将项目 scripts 文件夹中的 Collect-DeviceInfo.ps1 复制到当前目录，然后执行命令。",
-        powerShellStep3: "脚本会提示输入 SakuraFrp 访问密码；完成后点击“刷新设备数据”。",
+        powerShellStep3: "如果隧道启用了访问验证，脚本会提示输入密码；完成后点击“刷新设备数据”。",
         powerShellCopy: "复制命令",
         powerShellCopied: "命令已复制",
         powerShellCopyFailed: "复制失败，请手动选中命令复制",
