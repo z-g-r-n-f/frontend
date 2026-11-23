@@ -567,7 +567,8 @@ const supportsPowerShell = computed(() =>
 const powerShellCommand = computed(() => {
     const userId = getCurrentUserId() || "<登录后自动填充>"
     const type = device.value.deviceType || "LAPTOP"
-    return `powershell -NoProfile -ExecutionPolicy Bypass -File ".\\Collect-DeviceInfo.ps1" -UserId ${userId} -DeviceId ${deviceId} -ApiBaseUrl "${PUBLIC_API_BASE_URL}" -DeviceType ${type}`
+    const scriptUrl = `${PUBLIC_API_BASE_URL}/tools/collect-device-info.ps1`
+    return `$script = Join-Path $env:TEMP "DeviceLife-Collect-${deviceId}.ps1"; Invoke-WebRequest -UseBasicParsing -Uri "${scriptUrl}" -OutFile $script; try { & powershell -NoProfile -ExecutionPolicy Bypass -File $script -UserId ${userId} -DeviceId ${deviceId} -ApiBaseUrl "${PUBLIC_API_BASE_URL}" -DeviceType ${type} } finally { Remove-Item -LiteralPath $script -Force -ErrorAction SilentlyContinue }`
 })
 
 const eventTypeOptions = computed(() =>
